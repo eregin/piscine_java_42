@@ -24,13 +24,7 @@ hs_err_pid*
 
 .idea/
 target/
-.DS_Store
-*/*/*/*/*/*/.DS_Store
-*/*/*/*/*/.DS_Store
-*/*/*/*/.DS_Store
-*/*/*/.DS_Store
-*/*/.DS_Store
-*/.DS_Store
-day_06/*
+.DS_Store 
+*/.DS_Store 
 day_07/*
 day_08/*
