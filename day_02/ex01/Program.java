@@ -1,4 +1,4 @@
-package ex01;
+//package ex01;
 
 import java.io.*;
 import java.util.*;
@@ -6,13 +6,17 @@ import static java.lang.Math.*;
 
 public class Program {
     public static void main(String[] args) {
-//        Vector<String> v = vectorDictionary(args[0], args[1]);
         HashSet<String> v = vectorDictionary(args[0], args[1]);
         Vector<Integer> idA = vectorFrequencyOfOccurrence(args[0], v);
         Vector<Integer> idB = vectorFrequencyOfOccurrence(args[1], v);
         int numer = numerator(idA, idB, v.size());
         double denum = denomirator(idA, idB);
-        System.out.printf("Similarity = %.2f", numer/denum);
+        if (numer == 0) {
+            System.out.printf("Similarity = %d", 0);
+        }
+        else {
+            System.out.printf("Similarity = %.2f", numer / denum);
+        }
     }
 
     public static double denomirator(Vector<Integer> a, Vector<Integer> b){
@@ -37,23 +41,6 @@ public class Program {
         return numer;
     }
 
-//    public static Vector vectorFrequencyOfOccurrence(String filename, Vector<String> dictionary){
-//        Vector<String> fStr = vectorOccurrence(filename);
-//        Vector<Integer> dStr = new Vector<>(dictionary.size());
-//        Integer count = 0;
-//
-//        for (String a : dictionary){
-//            count = 0;
-//            for (String b : fStr) {
-//                if (a.equals(b)) {
-//                    count++;
-//                }
-//            }
-//            dStr.addElement(count);
-//        }
-//        return dStr;
-//    }
-
     public static Vector vectorFrequencyOfOccurrence(String filename, HashSet<String> dictionary){
         Vector<String> fStr = vectorOccurrence(filename);
         Vector<Integer> dStr = new Vector<>(dictionary.size());
@@ -71,48 +58,9 @@ public class Program {
         return dStr;
     }
 
-//    public static Vector vectorDictionary(String file1, String file2) {
-//        Vector<String> vStr = new Vector<>(10, 2);
-//        boolean isUniq;
-//        int j = 0;
-//        Vector<String> f1Str = vectorOccurrence(file1);
-//        Vector<String> f2Str = vectorOccurrence(file2);
-//        for (String a: f1Str) {
-//            isUniq = true;
-//            if (j == 0) {
-//                vStr.addElement(a);
-//                j++;
-//                continue;
-//            }
-//            for (int i = j; i > 0; i--) {
-//                String compare = f1Str.elementAt(i - 1);
-//                if (a.equals(f1Str.elementAt(i - 1))){
-//                    isUniq = false;
-//                    break;
-//                }
-//            }
-//            if (isUniq){
-//                vStr.addElement(a);
-//            }
-//            j++;
-//        }
-//        for (String a: f2Str){
-//            isUniq = true;
-//            for (String b: vStr){
-//                if (a.equals(b)){
-//                    isUniq = false;
-//                    break;
-//                }
-//            }
-//            if (isUniq){
-//                vStr.addElement(a);
-//            }
-//        }
-//        return vStr;
-//    }
-
     public static HashSet vectorDictionary(String file1, String file2) {
         HashSet<String> vStr = new HashSet<String>();
+        FileOutputStream fout;
         Vector<String> f1Str = vectorOccurrence(file1);
         Vector<String> f2Str = vectorOccurrence(file2);
         for (String a : f1Str){
@@ -121,28 +69,39 @@ public class Program {
         for (String b : f2Str){
             vStr.add(b);
         }
+        try {
+            fout = new FileOutputStream("dictionary.txt", true);
+            for (String hash: vStr) {
+                fout.write(hash.getBytes());
+                fout.write(" ".getBytes());
+            }
+            fout.write("\n".getBytes());
+            fout.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return vStr;
     }
 
     public static Vector vectorOccurrence(String filename){
         Vector<String> vStr = new Vector<>(10, 2);
         try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
-        String buf;
-        String line = "";
-        String[] split;
-        while ((buf = reader.readLine()) != null) {
-            line += buf;
+            String buf;
+            String line = "";
+            String[] split;
+            while ((buf = reader.readLine()) != null) {
+                line += buf;
+            }
+            split = line.split(" ");
+            for (String a: split) {
+                vStr.addElement(a);
+            }
+            return vStr;
         }
-        split = line.split(" ");
-        for (String a: split) {
-            vStr.addElement(a);
-        }
-        return vStr;
-    }
         catch (IOException e) {
-        e.printStackTrace();
-        System.exit(1);
-    }
+            e.printStackTrace();
+            System.exit(1);
+        }
         return null;
     }
 
